@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 import Correct from "./components/Correct";
+import Incorrect from "./components/Incorrect";
 
 function App() {
   const [data, setData] = useState({ word: "", transcription: "" });
@@ -50,6 +51,12 @@ function App() {
         {correct ? (
           <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
             <Correct attempts={attempts} />
+          </div>
+        ) : null}
+
+        {attempts === 6 ? (
+          <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <Incorrect answer={data.transcription} />
           </div>
         ) : null}
         <h1 className="text-center text-3xl text-gray-700">IPA'le</h1>
