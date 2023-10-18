@@ -2,35 +2,44 @@ import cheerio from "cheerio";
 import express from "express";
 import fetch from "node-fetch";
 import cors from "cors";
+import fs from "fs";
 
 const app = express();
 app.listen(4000);
 app.use(cors());
 
-const getWord = async () => {
-  try {
-    const response = await fetch(
-      "https://www.phonemicchart.com/transcribe/biglist.html"
-    );
+const getWord = () => {
+  // try {
+  //   const response = await fetch(
+  //     "https://www.phonemicchart.com/transcribe/biglist.html"
+  //   );
 
-    const body = await response.text();
-    const $ = cheerio.load(body);
+  //   const body = await response.text();
+  //   const $ = cheerio.load(body);
 
-    let arr = [];
-    $(".main > a").map((i, el) => {
-      arr.push($(el).text());
-    });
+  //   let arr = [];
+  //   $(".main > a").map((i, el) => {
+  //     arr.push($(el).text());
+  //   });
 
-    return arr;
-  } catch (error) {
-    console.log(error);
-  }
+  //   return arr;
+  // } catch (error) {
+  //   console.log(error);
+  // }
+
+  const data = fs.readFileSync("./wordlist.txt").toString().split(", ");
+  return data.filter((w) => w != "");
 };
 
 app.get("/word", async (req, res) => {
   try {
-    const arr = await getWord();
-    const word = arr[Math.floor(Math.random() * arr.length)];
+    const arr = getWord();
+    const word =
+      arr[
+        Math.floor(
+          (Math.round(Date.now() / (24 * 60 * 60)) / 100000000) * arr.length
+        )
+      ];
     const response = await fetch(
       `https://www.phonemicchart.com/transcribe/?w=${word}`
     );
