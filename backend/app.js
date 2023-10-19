@@ -34,12 +34,9 @@ const getWord = () => {
 app.get("/word", async (req, res) => {
   try {
     const arr = getWord();
-    const word =
-      arr[
-        Math.floor(
-          (Math.round(Date.now() / (24 * 60 * 60)) / 100000000) * arr.length
-        )
-      ];
+    const today = new Date();
+    const day = today.getDate();
+    const word = arr[day % arr.length];
     const response = await fetch(
       `https://www.phonemicchart.com/transcribe/?w=${word}`
     );
